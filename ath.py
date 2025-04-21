@@ -12,7 +12,7 @@ from livekit.plugins import (
     silero,
     groq
 )
-from livekit.plugins.turn_detector.multilingual import MultilingualModel
+#from livekit.plugins.turn_detector.multilingual import MultilingualModel
 from livekit.agents.llm import chat_context,ChatMessage
 from livekit.agents.log import logger
 from livekit import api, rtc
@@ -57,7 +57,7 @@ async def entrypoint(ctx: agents.JobContext):
             voice="Arista-PlayAI",
         ),
         vad=silero.VAD.load(),
-        turn_detection=MultilingualModel(),
+        #turn_detection=MultilingualModel(),
     )
 
 
