@@ -29,6 +29,8 @@ Commands:
 - /analyze : Analyze a token address
 """
 
+recognized_addresses = ["DE9ZmAqrVxcriUrBeiCJgYo5Ztnid2iGnU1JcyeUkaLL", "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v", "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB", "So11111111111111111111111111111111111111112", "Grass7B4RdKfBCjTKgSqnXkqjwiGvQyFbuSCUJr3XXjs"]
+
 # Store active tasks to prevent garbage collection
 _active_tasks = set()
 
@@ -174,9 +176,8 @@ async def entrypoint(ctx: agents.JobContext):
         
         if "Analyse token" in str_content or "analyse token" in str_content or "Analyze token" in str_content or "analyze token" in str_content:
             asyncio.create_task(command_func())
-            
-        if "DE9ZmAqrVxcriUrBeiCJgYo5Ztnid2iGnU1JcyeUkaLL" in str_content:
-            str_content = "DE9ZmAqrVxcriUrBeiCJgYo5Ztnid2iGnU1JcyeUkaLL"
+
+        if str_content in recognized_addresses:
             asyncio.create_task(analyse_cmd(str_content))
         else:
             pass
