@@ -91,7 +91,10 @@ async def entrypoint(ctx: agents.JobContext):
         # print("Token price function is called") DE9ZmAqrVxcriUrBeiCJgYo5Ztnid2iGnU1JcyeUkaLL
         # session.say("Token price function is called")
 
-    async def token_metadata(address: str):
+
+    async def analyse_cmd(address: str):
+        print("Analysing your crypto address...") #DE9ZmAqrVxcriUrBeiCJgYo5Ztnid2iGnU1JcyeUkaLL
+
         # token metadata
         try:
             metadata_url = f"https://solana-gateway.moralis.io/token/mainnet/{address}/metadata"
@@ -106,14 +109,13 @@ async def entrypoint(ctx: agents.JobContext):
             response = requests.request("GET", metadata_url, headers=headers)
             res_json = response.json()
             token_name = res_json["name"]
-            token_symbol = res_json["symbol"]
-            return {"token_name":token_name, "token_symbol": token_symbol}
-            # return res_json
+            symbol = res_json["symbol"]
+            # message =f"Token Information: Name: {token_name} Symbol: {symbol}"
+            # print(message)
             
         except Exception as e:
             print(e)
 
-    async def token_total_holders(address: str):
         # token total holders
         try:
             holders_url = f"https://solana-gateway.moralis.io/token/mainnet/holders/{address}"
@@ -131,8 +133,7 @@ async def entrypoint(ctx: agents.JobContext):
             
         except Exception as e:
             print(e)
-
-    async def token_total_liquidity(address: str):
+        
         # token analytics and totalLiquidityUSD
         try:
             liquididty_url = f"https://deep-index.moralis.io/api/v2.2/tokens/{address}/analytics?chain=solana"
@@ -151,18 +152,7 @@ async def entrypoint(ctx: agents.JobContext):
         except Exception as e:
             print(e)
 
-    async def analyse_cmd(address: str):
-        print("Analysing your crypto address...") #DE9ZmAqrVxcriUrBeiCJgYo5Ztnid2iGnU1JcyeUkaLL
-
-        
-
-        holders = await token_total_holders(address)
-        
-        total_liquidity_usd = await token_total_liquidity(address)
-
-        metadata = await token_metadata(address)
-
-        message = f"Token information - Name : {metadata['name']} Symbol : {metadata['symbol']} Total holders : {holders} Total liquidity : {total_liquidity_usd}"
+        message = f"Token information - Name : {token_name} Symbol : {symbol} Total holders : {holders} Total liquidity : {total_liquidity_usd}"
         session.say(message)
         
         print("Analyse over...")
@@ -186,7 +176,7 @@ async def entrypoint(ctx: agents.JobContext):
         
         if "Analyse token" in str_content or "analyse token" in str_content or "Analyze token" in str_content or "analyze token" in str_content:
             asyncio.create_task(command_func())
-            
+
         if str_content in recognized_addresses:
             asyncio.create_task(analyse_cmd(str_content))
         else:
@@ -199,4 +189,4 @@ async def entrypoint(ctx: agents.JobContext):
     # await session.say("Welcome ! I'm Chronos your AI Voice Crypto Trader.", allow_interruptions=True)
 
 if __name__ == "__main__":
-    agents.cli.run_app(agents.WorkerOptions(entrypoint_fnc=entrypoint, job_memory_limit_mb=500))
+    agents.cli.run_app(agents.WorkerOptions(entrypoint_fnc=entrypoint))
