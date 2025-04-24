@@ -9,7 +9,6 @@ from livekit.plugins import (
     openai,
     cartesia,
     deepgram,
-    noise_cancellation,
     silero,
     groq
 )
