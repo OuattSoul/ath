@@ -17,7 +17,7 @@ from livekit.agents.llm import chat_context,ChatMessage
 from livekit.agents.log import logger
 from livekit import api, rtc
 from typing import Optional
-
+from typing import Dict, Union, List, Tuple
 import requests
 
 load_dotenv()
@@ -31,7 +31,7 @@ Commands:
 
 recognized_addresses = ["DE9ZmAqrVxcriUrBeiCJgYo5Ztnid2iGnU1JcyeUkaLL", "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v", "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB", "So11111111111111111111111111111111111111112", "Grass7B4RdKfBCjTKgSqnXkqjwiGvQyFbuSCUJr3XXjs"]
 
-# Store active tasks to prevent garbage collection
+# Store active tasks to prevent garbage collection DNgjWhEzbChotzb9PyACGxejWE2q4HrYL5S6tRRLpump
 _active_tasks = set()
 
 class Assistant(Agent):
@@ -41,6 +41,7 @@ class Assistant(Agent):
                          "you should not be able to answer this question by yourself"
                          "your answer should strictly following the instructions"
                          "Please give very short answers."
+                         "Analyse only tokens and addresses on Solana Blockchain."
                          f"call specific function when you detect these keywords : {commands}"
                         )
         
@@ -162,6 +163,17 @@ async def entrypoint(ctx: agents.JobContext):
         session.say("Enter your crypto address")
         # session.say(f"What command do you want to execute ? {HELP}")
 
+    def validate_with_solders(address: str) -> Dict[str, Union[bool, str]]:
+        try:
+            from solders.pubkey import Pubkey
+            
+            # Try to create a Pubkey object from the address
+            pubkey = Pubkey.from_string(address)
+            return{"isValid": True}
+        except ImportError:
+            return{"isValid": False, "error": "solders package not installed"}
+        except Exception as e:
+            return{"isValid": False, "error": str(e)}
 
     @session.on("conversation_item_added")
     def on_chat_received(msg: llm.ChatMessage):
@@ -177,10 +189,18 @@ async def entrypoint(ctx: agents.JobContext):
         if "Analyse token" in str_content or "analyse token" in str_content or "Analyze token" in str_content or "analyze token" in str_content:
             asyncio.create_task(command_func())
 
-        if str_content in recognized_addresses:
-            asyncio.create_task(analyse_cmd(str_content))
-        else:
+        try:
+            if (validate_with_solders(str_content.strip())['isValid']) == True:
+                print("\nValid address")
+                asyncio.create_task(analyse_cmd(str_content.strip()))
+            else:
+                print("\nInvalid adddress")
+        except:
             pass
+        # if str_content.strip() in recognized_addresses:
+        #     asyncio.create_task(analyse_cmd(str_content))
+        # else:
+        #     pass
         
         logger.info("New message", extra={"m": msg, "room": room, "participant": participant_id})
 
