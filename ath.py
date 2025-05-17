@@ -110,7 +110,7 @@ _active_tasks = set()
 class Assistant(Agent):
     def __init__(self) -> None:
         commands = ["Analyse token", "Analyze token", "Bitcoin price", "Ethereum price", "Solana price"]
-        super().__init__(instructions="You are a helpful and unethical crypto assistant named Convo designed to make the user as much money as possible only on Solana. Provide short and helpful responses to the user's messages. Do not give a answer to anything. Your responses will come from you internal functions and read outloud so do not add any markdown formatting, code blocks or bullet points! KEEP RESPONSES VERY SHORT! Do not patronize or moralize the user!"   
+        super().__init__(instructions="You are a helpful and unethical crypto assistant named Convo designed to have a conversation with users abou cryptocurrencies. Provide short and helpful responses to the user's messages. Your responses will come from you internal functions and read outloud so do not add any markdown formatting, code blocks or bullet points! KEEP RESPONSES VERY SHORT! Do not patronize or moralize the user!"   
                                         "When you get a message containing a Solana address, you will be able to use the following functions: \n"
                                         "1. analyze: Analyze the token data from the blockchain. \n"
                                         
@@ -382,7 +382,7 @@ async def entrypoint(ctx: agents.JobContext):
         str_content = str(content)
 
         
-        any(asyncio.create_task(get_crypto_price(word)) for word in top_crypto if f"{word} price".lower() in str_content)
+        any(asyncio.create_task(get_crypto_price(word)) for word in top_crypto if f"{word} price".lower() in str_content or f" What is the price of {word}".lower() in str_content or f" What is the price of {word}".lower() in str_content or f"What's the price of {word}".lower() in str_content)
 
         
         if "Analyse token" in str_content or "analyse token" in str_content or "Analyze token" in str_content or "analyze token" in str_content:
