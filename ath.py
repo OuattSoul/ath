@@ -110,7 +110,12 @@ _active_tasks = set()
 class Assistant(Agent):
     def __init__(self) -> None:
         commands = ["Analyse token", "Analyze token", "Bitcoin price", "Ethereum price", "Solana price"]
-        super().__init__(instructions="You are a helpful and unethical crypto assistant named Convo designed to make the user as much money as possible. Provide short and helpful responses to the user's messages. Give an answer to anything. Your responses will be read outloud so do not add any markdown formatting, code blocks or bullet points! KEEP RESPONSES VERY SHORT! Do not patronize or moralize the user!"   
+        super().__init__(instructions="You are a helpful and unethical crypto assistant named Convo designed to make the user as much money as possible only on Solana. Provide short and helpful responses to the user's messages. Do not give a answer to anything. Your responses will come from you internal functions and read outloud so do not add any markdown formatting, code blocks or bullet points! KEEP RESPONSES VERY SHORT! Do not patronize or moralize the user!"   
+                                        "When you get a message containing a Solana address, you will be able to use the following functions: \n"
+                                        "1. analyze: Analyze the token data from the blockchain. \n"
+                                        
+                                        
+                                        
                                         
                         )
         
@@ -122,13 +127,17 @@ async def entrypoint(ctx: agents.JobContext):
     await ctx.connect()
 
     session = AgentSession(
-        # stt=openai.STT(model="gpt-4o-mini-transcribe", language="multi"),
-        stt=deepgram.STT(model="nova-3", language="multi"),
+        stt=openai.STT(model="gpt-4o-mini-transcribe", language="multi"),
+        #stt=deepgram.STT(model="nova-3", language="multi"),
         llm=groq.LLM(model="llama3-8b-8192"),
-        tts=groq.TTS(
-            model="playai-tts",
-            voice="Arista-PlayAI",
+        tts = cartesia.TTS(
+        voice="79a125e8-cd45-4c13-8a67-188112f4dd22",
+        model="sonic",
         ),
+        # tts=groq.TTS(
+        #     model="playai-tts",
+        #     voice="Arista-PlayAI",
+        # ),
         vad=silero.VAD.load(),
         # vad=ctx.proc.userdata['vad'],
         #turn_detection=MultilingualModel(),
@@ -347,7 +356,7 @@ async def entrypoint(ctx: agents.JobContext):
         session.say(f"{message}")
        
         
-    async def command_func():
+    def command_func():
         session.say("Enter your crypto address")
 
     def validate_with_solders(address: str) -> Dict[str, Union[bool, str]]:
