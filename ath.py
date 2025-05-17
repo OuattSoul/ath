@@ -127,7 +127,7 @@ async def entrypoint(ctx: agents.JobContext):
     await ctx.connect()
 
     session = AgentSession(
-        stt=openai.STT(model="gpt-4o-mini-transcribe", language="multi"),
+        stt=openai.STT(model="gpt-4o-mini-transcribe", language="en"),
         #stt=deepgram.STT(model="nova-3", language="multi"),
         llm=groq.LLM(model="llama3-8b-8192"),
         tts = cartesia.TTS(
