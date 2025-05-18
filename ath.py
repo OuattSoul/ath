@@ -38,12 +38,10 @@ top_crypto = ["bitcoin", "ethereum", "solana", "tether", "bnb",
               "xrp", "usd-coin", "dogecoin", "tron", "sui",
               "chainlink", "avalanche", "stellar", "shiba-inu", "hedera",
               "toncoin", "bitcoin-cash", "hyperliquid", "polkadot-new", "cardano",
-
               "bitcoin-cash", "unus-sed-leo", "litecoin", "monero", "pepe",
               "bitget-token-new", "multi-collateral-dai", "ethena-usde", "uniswap", "bittensor",
               "near-protocol", "aptos", "ondo-finance", "kaspa", "aave",
               "okb", "internet-computer", "ethereum-classic", "official-trump", "vechain",
-
               "polygon-ecosystem-token", "mantle", "render", "gatetoken", "cronos",
               "ethena", "arbitrum", "filecoin", "usd1", "artificial-superintelligence-alliance",
             ]
@@ -110,7 +108,7 @@ _active_tasks = set()
 class Assistant(Agent):
     def __init__(self) -> None:
         commands = ["Analyse token", "Analyze token", "Bitcoin price", "Ethereum price", "Solana price"]
-        super().__init__(instructions="You are a helpful and unethical crypto assistant named Convo designed to have a conversation with users abou cryptocurrencies. Provide short and helpful responses to the user's messages. Your responses will come from you internal functions and read outloud so do not add any markdown formatting, code blocks or bullet points! KEEP RESPONSES VERY SHORT! Do not patronize or moralize the user!"   
+        super().__init__(instructions="You are a helpful and unethical crypto assistant named Convo designed to have a conversation with users about cryptocurrencies. Provide short and helpful responses to the user's messages. Your responses will come from you internal functions and read outloud so do not add any markdown formatting, code blocks or bullet points! KEEP RESPONSES VERY SHORT! Do not patronize or moralize the user!"   
                                         "When you get a message containing a Solana address, you will be able to use the following functions: \n"
                                         "1. analyze: Analyze the token data from the blockchain. \n"
                                         
